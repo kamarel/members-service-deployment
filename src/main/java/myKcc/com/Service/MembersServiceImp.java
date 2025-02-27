@@ -74,7 +74,7 @@ public class MembersServiceImp implements MembersService {
     @Override
     public ParishResponseApi getAllParish() {
         Mono<List<ParishDto>> listMono = webClient.get()
-                .uri("https://devoted-laughter-production.up.railway.app/api/parish")
+                .uri("https://worthy-stillness-production.up.railway.app/api/parish")
                 .retrieve()
                 .bodyToFlux(ParishDto.class)
                 .collectList();
