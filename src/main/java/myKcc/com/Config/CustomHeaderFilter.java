@@ -1,8 +1,14 @@
-package com.parishservice.parishservice.Config;
+package myKcc.com.Config;
 
-import jakarta.servlet.*;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -10,8 +16,12 @@ import java.io.IOException;
 @Component
 public class CustomHeaderFilter implements jakarta.servlet.Filter {
 
+
     private static final String CUSTOM_HEADER_NAME = "X-Requested-By";
-    private static final String CUSTOM_HEADER_VALUE = "MyApiParish";
+
+
+
+    private static final String CUSTOM_HEADER_VALUE = "MyMembers";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -23,21 +33,15 @@ public class CustomHeaderFilter implements jakarta.servlet.Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-        String requestURI = httpServletRequest.getRequestURI();
+        String customHeader = httpServletRequest.getHeader(CUSTOM_HEADER_NAME);
 
-        // Skip custom header validation for the /actuator/** and /api/parish/** paths
-        if (requestURI.startsWith("/actuator") || requestURI.startsWith("/api/v1/members/")) {
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
-
-        // Comment this block temporarily
-         String customHeader = httpServletRequest.getHeader(CUSTOM_HEADER_NAME);
         if (CUSTOM_HEADER_VALUE.equals(customHeader)) {
-             filterChain.doFilter(servletRequest, servletResponse);
-         } else {
+            // If the header is valid, proceed with the request
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+            // Reject the request if the header is missing or incorrect
             httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Invalid or missing custom header");
-         }
+        }
     }
 
     @Override
