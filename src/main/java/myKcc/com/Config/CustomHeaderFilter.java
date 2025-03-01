@@ -8,10 +8,10 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+
 
 @Component
 public class CustomHeaderFilter implements jakarta.servlet.Filter {
@@ -21,7 +21,7 @@ public class CustomHeaderFilter implements jakarta.servlet.Filter {
 
 
 
-    private static final String CUSTOM_HEADER_VALUE = "MyMembers";
+    private static final String CUSTOM_HEADER_VALUE = "MyApiGateway";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
