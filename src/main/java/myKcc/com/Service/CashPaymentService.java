@@ -24,5 +24,4 @@ public interface CashPaymentService {
 
     CashPayment updatePayment(Long id, CashPayment cashPayment);
 
-
 }

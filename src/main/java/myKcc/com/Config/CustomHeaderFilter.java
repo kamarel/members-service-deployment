@@ -1,3 +1,4 @@
+/*
 package myKcc.com.Config;
 
 
@@ -48,4 +49,4 @@ public class CustomHeaderFilter implements jakarta.servlet.Filter {
     public void destroy() {
         // No need to call super.destroy();
     }
-}
+}*/

@@ -1,25 +1,26 @@
 package myKcc.com.Controller;
 
-
-import myKcc.com.ApiResponse.ParishDto;
+import myKcc.com.ApiResponse.ApiResponse;
 import myKcc.com.ApiResponse.ParishResponseApi;
 import myKcc.com.Entity.CashPayment;
 import myKcc.com.Entity.Members;
-
-
-import myKcc.com.ApiResponse.ApiResponse;
 import myKcc.com.Service.CashPaymentServiceImp;
 import myKcc.com.Service.EmailService;
 import myKcc.com.Service.MembersServiceImp;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
-//@CrossOrigin(maxAge = 3360, origins = "http://http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/members")
 public class MembersController {
@@ -32,6 +33,9 @@ public class MembersController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private WebClient webClient;
 
     @GetMapping("/cash")
     public ResponseEntity<List<ApiResponse>> getAllCashPaymentsWithMemberFullName() {
@@ -55,6 +59,7 @@ public class MembersController {
         return cashPaymentServiceImp.getMembersWhoMissedPayment();
     }
 
+
     @PostMapping("/{memberId}/pay")
     public ResponseEntity<CashPayment> makePayment(@PathVariable String memberId, @RequestBody CashPayment cashPayment) {
         try {
@@ -76,6 +81,7 @@ public class MembersController {
     }
 
 
+
     @DeleteMapping("/{id}/delete/pay")
     public ResponseEntity<String>deletedPaymentById(@PathVariable Long id){
         cashPaymentServiceImp.deleteCashPaymentById(id);
@@ -88,8 +94,6 @@ public class MembersController {
     public ResponseEntity<List<Members>> getAllMembers(){
         return ResponseEntity.ok(membersServiceImp.getAllMembers());
     }
-
-
 
     // Get member by numerical ID (Long)
     @GetMapping("/id/{id}")
@@ -107,6 +111,14 @@ public class MembersController {
 
         return ResponseEntity.ok(members1);
     }
+
+
+
+
+
+
+
+
 
     // Update a member by numerical ID (Long)
     @PutMapping("/id/{id}")
@@ -134,16 +146,23 @@ public class MembersController {
     }
 
     // Delete a member by member ID (String)
-    @DeleteMapping("/memberId/{memberId}")
+    @DeleteMapping("/delete/{memberId}")
     public ResponseEntity<Void> deleteByMemberId(@PathVariable("memberId") String memberId){
         membersServiceImp.deleteByMemberId(memberId);
         return ResponseEntity.noContent().build();
     }
 
-    // Find member by member ID (String)
-    @GetMapping("/memberId/{memberId}")
-    public ResponseEntity<Members> findByMemberId(@PathVariable("memberId") String memberId){
-        return new ResponseEntity<>(membersServiceImp.findByMemberId(memberId), HttpStatus.FOUND);
+
+
+    @GetMapping("/getBy/{memberId}")
+    public ResponseEntity<Members> getMembersById(@PathVariable("memberId") String memberId) {
+        Members members = membersServiceImp.findByMemberId(memberId);
+
+        if (members != null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(members);
     }
 
 
@@ -154,17 +173,17 @@ public class MembersController {
     }
 
 
-     @DeleteMapping("/id/{id}")
-     public ResponseEntity<Void> deleteMemberWithPayment(@PathVariable Long id) {
-         membersServiceImp.deleteMemberWithPayments(id);
-         return ResponseEntity.noContent().build();
-     }
-
-
-    @GetMapping("/all")
-    public ResponseEntity<ParishResponseApi> getAllParish() {
-        ParishResponseApi response = membersServiceImp.getAllParish();
-        return ResponseEntity.ok(response);
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<Void> deleteMemberWithPayment(@PathVariable Long id) {
+        membersServiceImp.deleteMemberWithPayments(id);
+        return ResponseEntity.noContent().build();
     }
+
+
+
+
+
+
+
 
 }

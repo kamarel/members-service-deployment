@@ -14,10 +14,17 @@ import java.util.Optional;
 @Repository
 public interface MembersRepository extends JpaRepository<Members, Long> {
 
+
     Optional<Members> findByEmail(String email);
     void deleteByMemberId(String memberId);
 
+
+
     Members findByMemberId(String memberId);
+
+
+
+
     Members findByFullName(String fullName);
 
     @Query("SELECT p FROM Members p WHERE " +
