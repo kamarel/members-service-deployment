@@ -1,4 +1,3 @@
-/*
 package myKcc.com.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,4 +23,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-}*/
+}
