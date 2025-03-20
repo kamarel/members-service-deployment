@@ -28,6 +28,62 @@ public class MembersServiceImp implements MembersService {
     @Autowired
     private CashPaymentRepository cashPaymentRepository;
 
+    @Autowired
+    private EmailService emailService;
+
+
+
+    @Override
+    public Members saveMembers(Members members, String token) {
+
+        // Save the member to the database
+        Members savedMember = membersRepository.save(members);
+
+
+        ParishResponseApi apiResponseDto = getAllParish(token);
+        List<ParishDto> parishDtoList = apiResponseDto.getParishDtoList();
+
+        // Extract email addresses
+        List<String> parishName = parishDtoList.stream()
+                .map(ParishDto::getParishName)
+                .collect(Collectors.toList());
+
+
+
+
+
+
+        emailService.sendRegistration(savedMember.getEmail(), String.valueOf(parishName));
+
+
+
+        return savedMember;
+
+    }
+
+
+    @Override
+    public ParishResponseApi getAllParish(String token) {
+        Mono<List<ParishDto>> listMono = webClient.get()
+                .uri("https://distinguished-education-production.up.railway.app/api/parish")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .retrieve()
+                .bodyToFlux(ParishDto.class)
+                .collectList();
+
+        List<ParishDto> parishDtoList = listMono.block();
+
+        ParishResponseApi apiResponseDto = new ParishResponseApi();
+        apiResponseDto.setParishDtoList(parishDtoList);
+        return apiResponseDto;
+    }
+
+
+
+
+
+
+
     @Override
     public List<Members> getAllMembers() {
         return membersRepository.findAll();
@@ -37,24 +93,6 @@ public class MembersServiceImp implements MembersService {
     public Members getById(Long id) {
         return membersRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
     }
-
-    @Override
-    public Members saveMembers(Members members) {
-
-        // Save the member to the database
-        Members savedMember = membersRepository.save(members);
-
-
-
-            savedMember.setParishName(savedMember.getParishName());
-
-
-        // Save the member again with the assigned parish
-        return membersRepository.save(savedMember);
-
-    }
-
-
 
 
 

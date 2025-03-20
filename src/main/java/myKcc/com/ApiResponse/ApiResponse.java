@@ -22,6 +22,19 @@ public class ApiResponse {
     }
 
 
+    public String getFullName() {
+        return fullName;
+    }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
+    public List<CashPayment> getCashPayments() {
+        return cashPayments;
+    }
+
+    public void setCashPayments(List<CashPayment> cashPayments) {
+        this.cashPayments = cashPayments;
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface MembersService {
     List<Members> getAllMembers();
     Members getById(Long id);
-    Members saveMembers(Members members);
+    Members saveMembers(Members members, String token);
     Members updateMembers( Long id, Members members);
     String deleteMemberById(Long id);
     List<Members>searchMembers(String query);
@@ -24,5 +24,5 @@ public interface MembersService {
     Members findByFullName(String fullName);
     void deleteMemberWithPayments(Long memberId);
 
-
+    ParishResponseApi getAllParish(String token);
 }

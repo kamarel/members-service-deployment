@@ -103,11 +103,12 @@ public class MembersController {
 
     // Create a new member
     @PostMapping
-    public ResponseEntity<Members> createMembers(@RequestBody Members members){
+    public ResponseEntity<Members> createMembers(@RequestBody Members members,  @RequestHeader(name = "Authorization", required = true) String authorizationHeader){
 
-        Members members1 = membersServiceImp.saveMembers(members);
+        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
+        Members members1 = membersServiceImp.saveMembers(members, token);
 
-        emailService.sendRegistration(members1.getEmail(), members1.getParishName());
+        //emailService.sendRegistration(members1.getEmail(), members1.getParishName());
 
         return ResponseEntity.ok(members1);
     }

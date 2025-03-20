@@ -13,4 +13,12 @@ import java.util.List;
 public class ParishResponseApi {
 
     private List<ParishDto> parishDtoList;
+
+    public List<ParishDto> getParishDtoList() {
+        return parishDtoList;
+    }
+
+    public void setParishDtoList(List<ParishDto> parishDtoList) {
+        this.parishDtoList = parishDtoList;
+    }
 }
