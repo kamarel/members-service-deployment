@@ -53,7 +53,9 @@ public class MembersServiceImp implements MembersService {
 
 
 
-        emailService.sendRegistration(savedMember.getEmail(), String.valueOf(parishName));
+        //emailService.sendRegistration(savedMember.getEmail(), String.valueOf(parishName));
+        emailService.sendRegistration(savedMember.getEmail(), String.join(", ", parishName));
+
 
 
 
